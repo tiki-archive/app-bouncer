@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) TIKI Inc.
+ * MIT license. See LICENSE file in root directory.
+ */
+
 package com.mytiki.bouncer.main;
 
 import com.mytiki.bouncer.config.ConfigBouncerApp;

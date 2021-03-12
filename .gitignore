@@ -32,3 +32,9 @@ hs_err_pid*
 # Property files
 application-*.properties
 !application-*.template.properties
+
+# Fuckin Macs
+.DS_Store
+
+# Gradle
+.gradle
