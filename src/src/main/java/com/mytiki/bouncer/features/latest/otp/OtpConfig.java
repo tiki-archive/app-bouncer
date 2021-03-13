@@ -3,26 +3,27 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.Otp;
+package com.mytiki.bouncer.features.latest.otp;
 
+import com.mytiki.bouncer.utilities.PackageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableJpaRepositories(OneTimeTokenConfig.PACKAGE_PATH)
-@EntityScan(OneTimeTokenConfig.PACKAGE_PATH)
-public class OneTimeTokenConfig {
+@EnableJpaRepositories(OtpConfig.PACKAGE_PATH)
+@EntityScan(OtpConfig.PACKAGE_PATH)
+public class OtpConfig {
 
-    public static final String PACKAGE_PATH = "com.mytiki.bouncer.features.latest.OneTimeToken";
+    public static final String PACKAGE_PATH = PackageConstants.PACKAGE_FEATURES_LATEST_DOT_PATH + ".otp";
 
     @Bean
-    public OtpService oneTimeTokenService(@Autowired OtpRepository tokenRepository){
-        return new OtpService(tokenRepository);
+    public OtpService otpService(@Autowired OtpRepository otpRepository){
+        return new OtpService(otpRepository);
     }
 
     @Bean
-    public OtpController oneTimeTokenController(@Autowired OtpService tokenService){
-        return new OtpController(tokenService);
+    public OtpController otpController(@Autowired OtpService otpService){
+        return new OtpController(otpService);
     }
 }

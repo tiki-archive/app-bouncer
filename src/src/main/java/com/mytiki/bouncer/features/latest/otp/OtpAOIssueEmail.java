@@ -3,17 +3,17 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.OneTimeToken;
+package com.mytiki.bouncer.features.latest.otp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class OneTimeTokenAOEmail {
+public class OtpAOIssueEmail {
 
     private String email;
 
     @JsonCreator
-    public OneTimeTokenAOEmail(@JsonProperty(value = "email", required = true) String email) {
+    public OtpAOIssueEmail(@JsonProperty(value = "email", required = true) String email) {
         this.email = email;
     }
 

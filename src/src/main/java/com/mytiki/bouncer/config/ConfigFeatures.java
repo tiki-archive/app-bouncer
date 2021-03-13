@@ -5,11 +5,11 @@
 
 package com.mytiki.bouncer.config;
 
-import com.mytiki.bouncer.features.latest.OneTimeToken.OneTimeTokenConfig;
+import com.mytiki.bouncer.features.latest.otp.OtpConfig;
 import org.springframework.context.annotation.Import;
 
 @Import({
-        OneTimeTokenConfig.class
+        OtpConfig.class
 })
 public class ConfigFeatures {
 }

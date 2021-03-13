@@ -3,11 +3,11 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.Otp;
+package com.mytiki.bouncer.features.latest.otp;
 
 import java.time.ZonedDateTime;
 
-public class OneTimeTokenAORsp {
+public class OtpAOIssueRsp {
 
     private String deviceToken;
     private ZonedDateTime issued;

@@ -5,6 +5,8 @@
 
 package com.mytiki.bouncer.config;
 
+import com.mytiki.common.exception.ApiExceptionHandlerDefault;
+import com.mytiki.common.reply.ApiReplyHandlerDefault;
 import org.springframework.context.annotation.Import;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +14,8 @@ import java.util.TimeZone;
 
 @Import({
         ConfigProperties.class,
+        ApiExceptionHandlerDefault.class,
+        ApiReplyHandlerDefault.class,
         ConfigFeatures.class
 })
 public class ConfigBouncerApp {

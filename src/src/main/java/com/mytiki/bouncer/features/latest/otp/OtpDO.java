@@ -3,15 +3,15 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.Otp;
+package com.mytiki.bouncer.features.latest.otp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "one_time_token")
-public class OneTimeTokenDO implements Serializable {
+@Table(name = "otp")
+public class OtpDO implements Serializable {
 
     private Long id;
     private String deviceToken;
