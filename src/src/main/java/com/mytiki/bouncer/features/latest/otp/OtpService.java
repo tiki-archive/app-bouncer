@@ -3,7 +3,7 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.OneTimeToken;
+package com.mytiki.bouncer.features.latest.Otp;
 
 import com.mytiki.common.exception.ApiExceptionFactory;
 import org.slf4j.Logger;
@@ -27,12 +27,14 @@ public class OneTimeTokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    public void issue(OneTimeTokenAOEmail tokenAO){
+    public OneTimeTokenAORsp issue(OtpAOIssueEmail tokenAO){
         OneTimeTokenDO tokenDO = new OneTimeTokenDO();
-        byte[] tokenByteArray = new byte[32];
+        byte[] deviceTokenByteArray = new byte[32];
+        byte[] linkTokenByteArray = new byte[32];
 
         try {
-            SecureRandom.getInstanceStrong().nextBytes(tokenByteArray);
+            SecureRandom.getInstanceStrong().nextBytes(deviceTokenByteArray);
+            SecureRandom.getInstanceStrong().nextBytes(linkTokenByteArray);
         }catch (NoSuchAlgorithmException e) {
             throw ApiExceptionFactory.exception(
                     HttpStatus.UNPROCESSABLE_ENTITY,
@@ -40,12 +42,14 @@ public class OneTimeTokenService {
         }
 
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        tokenDO.setToken(encoder.encodeToString(tokenByteArray));
+        tokenDO.setDeviceToken(encoder.encodeToString(deviceTokenByteArray));
+        tokenDO.setLinkToken(encoder.encodeToString(linkTokenByteArray));
 
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
         tokenDO.setIssued(now);
         tokenDO.setExpires(now.plusMinutes(EXPIRY_DURATION_MINUTES));
 
-        tokenRepository.save(tokenDO);
+        OneTimeTokenDO savedTokenDO = tokenRepository.save(tokenDO);
+        return OneTimeTokenMapper.toAORsp(savedTokenDO);
     }
 }

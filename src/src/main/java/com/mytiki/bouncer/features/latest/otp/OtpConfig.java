@@ -3,7 +3,7 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.OneTimeToken;
+package com.mytiki.bouncer.features.latest.Otp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -17,12 +17,12 @@ public class OneTimeTokenConfig {
     public static final String PACKAGE_PATH = "com.mytiki.bouncer.features.latest.OneTimeToken";
 
     @Bean
-    public OneTimeTokenService oneTimeTokenService(@Autowired OneTimeTokenRepository tokenRepository){
-        return new OneTimeTokenService(tokenRepository);
+    public OtpService oneTimeTokenService(@Autowired OtpRepository tokenRepository){
+        return new OtpService(tokenRepository);
     }
 
     @Bean
-    public OneTimeTokenController oneTimeTokenController(@Autowired OneTimeTokenService tokenService){
-        return new OneTimeTokenController(tokenService);
+    public OtpController oneTimeTokenController(@Autowired OtpService tokenService){
+        return new OtpController(tokenService);
     }
 }

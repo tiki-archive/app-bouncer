@@ -3,7 +3,7 @@
  * MIT license. See LICENSE file in root directory.
  */
 
-package com.mytiki.bouncer.features.latest.OneTimeToken;
+package com.mytiki.bouncer.features.latest.Otp;
 
 import java.time.ZonedDateTime;
 
