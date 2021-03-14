@@ -16,6 +16,7 @@ import java.util.TimeZone;
         ConfigProperties.class,
         ApiExceptionHandlerDefault.class,
         ApiReplyHandlerDefault.class,
+        ConfigUtilities.class,
         ConfigFeatures.class
 })
 public class ConfigBouncerApp {

@@ -13,5 +13,5 @@ import java.util.Optional;
 @Repository
 public interface OtpRepository extends JpaRepository<OtpDO, Long> {
 
-    Optional<OtpDO> findByDeviceToken(String deviceToken);
+    Optional<OtpDO> findByOtpHashed(String hashedOtp);
 }

@@ -9,16 +9,16 @@ import java.time.ZonedDateTime;
 
 public class OtpAOIssueRsp {
 
-    private String deviceToken;
+    private String salt;
     private ZonedDateTime issued;
     private ZonedDateTime expires;
 
-    public String getDeviceToken() {
-        return deviceToken;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public ZonedDateTime getIssued() {

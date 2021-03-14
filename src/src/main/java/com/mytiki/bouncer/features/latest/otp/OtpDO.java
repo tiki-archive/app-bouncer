@@ -14,8 +14,7 @@ import java.time.ZonedDateTime;
 public class OtpDO implements Serializable {
 
     private Long id;
-    private String deviceToken;
-    private String linkToken;
+    private String otpHashed;
     private ZonedDateTime issued;
     private ZonedDateTime expires;
 
@@ -30,22 +29,13 @@ public class OtpDO implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "device_token")
-    public String getDeviceToken() {
-        return deviceToken;
+    @Column(name = "otp_hashed")
+    public String getOtpHashed() {
+        return otpHashed;
     }
 
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
-    }
-
-    @Column(name = "link_token")
-    public String getLinkToken() {
-        return linkToken;
-    }
-
-    public void setLinkToken(String linkToken) {
-        this.linkToken = linkToken;
+    public void setOtpHashed(String otpHashed) {
+        this.otpHashed = otpHashed;
     }
 
     @Column(name = "issued_utc")

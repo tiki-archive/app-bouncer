@@ -10,31 +10,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OtpAOAuthenticate {
 
-    private String deviceToken;
-    private String linkToken;
+    private String otp;
+    private String salt;
 
     @JsonCreator
     public OtpAOAuthenticate(
-            @JsonProperty(value = "deviceToken", required = true) String deviceToken,
-            @JsonProperty(value = "linkToken", required = true) String linkToken
+            @JsonProperty(value = "otp", required = true) String otp,
+            @JsonProperty(value = "salt", required = true) String salt
     ) {
-        this.deviceToken = deviceToken;
-        this.linkToken = linkToken;
+        this.otp = otp;
+        this.salt = salt;
     }
 
-    public String getDeviceToken() {
-        return deviceToken;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
-    public String getLinkToken() {
-        return linkToken;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setLinkToken(String linkToken) {
-        this.linkToken = linkToken;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }
