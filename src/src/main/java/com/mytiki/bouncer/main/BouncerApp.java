@@ -21,3 +21,5 @@ public class BouncerApp {
     }
 
 }
+
+//TODO add health check

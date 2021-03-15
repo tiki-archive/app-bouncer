@@ -30,15 +30,17 @@ public class OtpService {
     private final OtpRepository otpRepository;
     private final SendgridHelper sendgridHelper;
     private final OtpTemplateEmail otpTemplateEmail;
+
     private static final Long EXPIRY_DURATION_MINUTES = 3L;
     private static final String KEY_OTP = "otp";
     private static final String KEY_SALT = "salt";
+    private static final String FAILED_AUTHENTICATE_MSG = "Failed to redeem One-time Password (OTP)";
+    private static final String FAILED_ISSUE_MSG = "Failed to issue a secure One-time Password (OTP)";
+    private static final String FAILED_EMAIL_MSG = "Failed to send email";
+    private static final String INVALID_OTP_MSG = "Invalid One-time Password (OTP).";
+    private static final String EXPIRED_OTP_MSG = "One-time Password (OTP) expired. Re-issue and try again.";
 
-    String failedAuthenticateMsg = "Failed to authenticate";
-    String failedIssueMsg = "Failed to issue a secure One-time Password (OTP)";
-    String failedEmailMsg = "Failed to send email";
-    String invalidOtpMsg = "Invalid One-time Password (OTP).";
-    String expiredOtpMsg = "One-time Password (OTP) expired. Re-issue and try again.";
+    //TODO routine to clean up expired OTPs from DB.
 
     public OtpService(
             OtpRepository otpRepository,
@@ -63,7 +65,7 @@ public class OtpService {
                 otpTemplateEmail.renderBodyText(templateDataMap));
 
         if(emailSuccess) return issue(newOtpMap.get(KEY_OTP), newOtpMap.get(KEY_SALT));
-        else throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, failedEmailMsg);
+        else throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, FAILED_EMAIL_MSG);
     }
 
     public OtpAOIssueRsp issue(OtpAOIssuePush otpAOIssuePush){
@@ -72,27 +74,23 @@ public class OtpService {
         return issue(newOtpMap.get(KEY_OTP), newOtpMap.get(KEY_SALT));
     }
 
-    public OtpAOAuthenticateRsp authenticate(OtpAOAuthenticate otpAOAuthenticate){
+    public void redeem(String otp, String salt){
         String hashedOtp;
         try{
-            hashedOtp = sha512(otpAOAuthenticate.getOtp(), otpAOAuthenticate.getSalt());
+            hashedOtp = sha512(otp, salt);
         } catch (NoSuchAlgorithmException e) {
             logger.error("Unable to execute SHA-512", e);
-            throw ApiExceptionFactory.exception(HttpStatus.UNAUTHORIZED, failedAuthenticateMsg);
+            throw ApiExceptionFactory.exception(HttpStatus.UNAUTHORIZED, FAILED_AUTHENTICATE_MSG);
         }
 
         Optional<OtpDO> otpDO = otpRepository.findByOtpHashed(hashedOtp);
         if(otpDO.isEmpty())
-            throw ApiExceptionFactory.exception(HttpStatus.UNAUTHORIZED, invalidOtpMsg);
+            throw ApiExceptionFactory.exception(HttpStatus.UNAUTHORIZED, INVALID_OTP_MSG);
 
         otpRepository.delete(otpDO.get());
 
         if(ZonedDateTime.now(ZoneOffset.UTC).isAfter(otpDO.get().getExpires()))
-            throw ApiExceptionFactory.exception(HttpStatus.UNAUTHORIZED, expiredOtpMsg);
-
-        OtpAOAuthenticateRsp rsp = new OtpAOAuthenticateRsp();
-        rsp.setJwt("hello");
-        return rsp;
+            throw ApiExceptionFactory.exception(HttpStatus.UNAUTHORIZED, EXPIRED_OTP_MSG);
     }
 
     private Map<String, String> generateNewOtp(){
@@ -105,7 +103,7 @@ public class OtpService {
             SecureRandom.getInstanceStrong().nextBytes(saltByteArray);
         }catch (NoSuchAlgorithmException e) {
             logger.error("Unable to generate secure random", e);
-            throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, failedIssueMsg);
+            throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, FAILED_ISSUE_MSG);
         }
 
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
@@ -121,7 +119,7 @@ public class OtpService {
             otpDO.setOtpHashed(sha512(otp, salt));
         } catch (NoSuchAlgorithmException e) {
             logger.error("Unable to execute SHA-512", e);
-            throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, failedIssueMsg);
+            throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, FAILED_ISSUE_MSG);
         }
 
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);

@@ -38,3 +38,6 @@ application-*.properties
 
 # Gradle
 .gradle
+
+# Private Key [temporary until setup remote secrets]
+private.key

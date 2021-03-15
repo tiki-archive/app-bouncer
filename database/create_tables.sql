@@ -13,3 +13,14 @@ CREATE TABLE IF NOT EXISTS otp(
     expires_utc TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY(id)
 );
+
+-- -----------------------------------------------------------------------
+-- JWT REFRESH
+-- -----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS jwt(
+    id BIGSERIAL NOT NULL,
+    refresh_jwt TEXT NOT NULL UNIQUE,
+    issued_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+    expires_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+    PRIMARY KEY(id)
+);

@@ -20,4 +20,6 @@ public interface Constants {
     String AUTHORITY_READ = AUTHORITY_BASE + "READ";
     String AUTHORITY_WRITE = AUTHORITY_BASE + "WRITE";
     String AUTHORITY_ADMIN = AUTHORITY_BASE + "ADMIN";
+
+    String OAUTH_TOKEN_TYPE_BEARER = "bearer";
 }

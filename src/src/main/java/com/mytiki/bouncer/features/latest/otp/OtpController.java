@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OtpController {
 
     public static final String PATH_CONTROLLER = ApiConstants.API_LATEST_ROUTE + "otp";
-    public static final String PATH_ISSUE = "/issue";
-    public static final String PATH_AUTHENTICATE = "/authenticate";
     public static final String PATH_EMAIL = "/email";
     public static final String PATH_PUSH = "/push";
 
@@ -29,18 +27,13 @@ public class OtpController {
         this.otpService = otpService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = PATH_ISSUE + PATH_EMAIL)
+    @RequestMapping(method = RequestMethod.POST, path = PATH_EMAIL)
     public ApiReplyAO<OtpAOIssueRsp> postIssueEmail(@RequestBody OtpAOIssueEmail body){
         return ApiReplyAOFactory.ok(otpService.issue(body));
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = PATH_ISSUE + PATH_PUSH)
+    @RequestMapping(method = RequestMethod.POST, path = PATH_PUSH)
     public ApiReplyAO<OtpAOIssueRsp> postIssuePush(@RequestBody OtpAOIssuePush body){
         return ApiReplyAOFactory.ok(otpService.issue(body));
-    }
-
-    @RequestMapping(method = RequestMethod.POST, path = PATH_AUTHENTICATE)
-    public ApiReplyAO<OtpAOAuthenticateRsp> postAuthenticate(@RequestBody OtpAOAuthenticate body){
-        return ApiReplyAOFactory.ok(otpService.authenticate(body));
     }
 }

@@ -5,8 +5,8 @@
 
 package com.mytiki.bouncer.config;
 
+import com.mytiki.bouncer.features.latest.jwt.JwtController;
 import com.mytiki.bouncer.features.latest.otp.OtpController;
-import com.mytiki.bouncer.utilities.Constants;
 import com.mytiki.common.ApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,28 +73,21 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
                         .httpPublicKeyPinning().and()
                         .contentSecurityPolicy(CONTENT_SECURITY_POLICY)
                 )
-                .anonymous(anonymous -> anonymous.authorities(Constants.AUTHORITY_READ))
+                .anonymous().and()
                 .cors(cors -> cors
                         .configurationSource(corsConfigurationSource())
                 )
-                /*.oauth2ResourceServer(oauth2 -> oauth2
-                        .opaqueToken(opaqueToken -> opaqueToken
-                                .introspector(oauthAccessIntrospector)
-                        )
-                )*/
                 .authorizeRequests(authorize -> authorize
                         .antMatchers(
                                 HttpMethod.POST,
-                                OtpController.PATH_CONTROLLER + OtpController.PATH_ISSUE + OtpController.PATH_EMAIL,
-                                OtpController.PATH_CONTROLLER + OtpController.PATH_ISSUE + OtpController.PATH_PUSH,
-                                OtpController.PATH_CONTROLLER + OtpController.PATH_AUTHENTICATE
+                                OtpController.PATH_CONTROLLER + OtpController.PATH_EMAIL,
+                                OtpController.PATH_CONTROLLER + OtpController.PATH_PUSH,
+                                JwtController.PATH_CONTROLLER + JwtController.PATH_REFRESH,
+                                JwtController.PATH_CONTROLLER + JwtController.PATH_OTP
                         ).permitAll()
                         .antMatchers(
                                 ApiConstants.ADMIN_ROUTE + "health", ApiConstants.ADMIN_ROUTE + "error"
                         ).permitAll()
-                        .antMatchers(
-                                ApiConstants.ADMIN_ROUTE + "**"
-                        ).hasAuthority(Constants.AUTHORITY_ADMIN)
                         .anyRequest()
                         .authenticated()
                 );
