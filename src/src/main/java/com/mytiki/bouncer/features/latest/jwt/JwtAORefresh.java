@@ -13,7 +13,7 @@ public class JwtAORefresh {
     private String refreshToken;
 
     @JsonCreator
-    public JwtAORefresh(@JsonProperty(value = "refreshToken", required = true) String refreshToken) {
+    public JwtAORefresh(@JsonProperty(required = true) String refreshToken) {
         this.refreshToken = refreshToken;
     }
 

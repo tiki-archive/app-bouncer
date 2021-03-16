@@ -14,6 +14,7 @@ import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class JwtService {
@@ -36,9 +38,6 @@ public class JwtService {
     private static final String FAILED_GRANT_MSG = "Failed to grant JWT";
     private static final String INVALID_REFRESH_MSG = "Invalid Refresh Token";
     private static final String EXPIRED_REFRESH_MSG = "Refresh Token expired. Re-login";
-
-    //TODO routine to periodically clean up refresh tokens
-    //TODO monitor refresh tokens for abuse
 
     public JwtService(String path, String kid, JwtRepository jwtRepository, OtpService otpService)
             throws IOException, ParseException, JOSEException {
@@ -68,7 +67,6 @@ public class JwtService {
         return grantNewJwt();
     }
 
-
     private JwtAO grantNewJwt(){
         JwtAO jwtAO = new JwtAO();
 
@@ -94,7 +92,6 @@ public class JwtService {
         return jwtAO;
     }
 
-
     private String generateJwt(ZonedDateTime iat, ZonedDateTime exp) throws JOSEException {
         JWSObject jwsObject = new JWSObject(
                 new JWSHeader
@@ -113,5 +110,11 @@ public class JwtService {
 
         jwsObject.sign(signer);
         return jwsObject.serialize();
+    }
+
+    @Scheduled(fixedDelay = 1000*60*60*24) //24hrs
+    private void prune(){
+        List<JwtDO> expired = jwtRepository.findAllByExpiresBefore(ZonedDateTime.now(ZoneOffset.UTC));
+        jwtRepository.deleteInBatch(expired);
     }
 }

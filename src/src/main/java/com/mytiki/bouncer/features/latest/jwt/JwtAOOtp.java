@@ -15,8 +15,8 @@ public class JwtAOOtp {
 
     @JsonCreator
     public JwtAOOtp(
-            @JsonProperty(value = "otp", required = true) String otp,
-            @JsonProperty(value = "salt", required = true) String salt
+            @JsonProperty(required = true) String otp,
+            @JsonProperty(required = true) String salt
     ) {
         this.otp = otp;
         this.salt = salt;

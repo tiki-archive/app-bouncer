@@ -13,7 +13,7 @@ public class OtpAOIssueEmail {
     private String email;
 
     @JsonCreator
-    public OtpAOIssueEmail(@JsonProperty(value = "email", required = true) String email) {
+    public OtpAOIssueEmail(@JsonProperty(required = true) String email) {
         this.email = email;
     }
 

@@ -6,6 +6,7 @@
 package com.mytiki.bouncer.features.latest.otp;
 
 import com.mytiki.bouncer.utilities.Constants;
+import com.mytiki.bouncer.utilities.FirebaseMessagingHelper;
 import com.mytiki.bouncer.utilities.SendgridHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -22,9 +23,10 @@ public class OtpConfig {
     public OtpService otpService(
             @Autowired OtpRepository otpRepository,
             @Autowired SendgridHelper sendgridHelper,
-            @Autowired OtpTemplateEmail otpTemplateEmail
+            @Autowired OtpTemplate otpTemplate,
+            @Autowired FirebaseMessagingHelper firebaseMessagingHelper
     ){
-        return new OtpService(otpRepository, sendgridHelper, otpTemplateEmail);
+        return new OtpService(otpRepository, sendgridHelper, otpTemplate, firebaseMessagingHelper);
     }
 
     @Bean
@@ -33,7 +35,7 @@ public class OtpConfig {
     }
 
     @Bean
-    public OtpTemplateEmail otpTemplateEmail(){
-        return new OtpTemplateEmail();
+    public OtpTemplate otpTemplateEmail(){
+        return new OtpTemplate();
     }
 }

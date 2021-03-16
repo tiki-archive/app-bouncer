@@ -21,6 +21,9 @@ public class ConfigProperties {
     @Value("${com.mytiki.bouncer.jwt.key.id}")
     private String jwtKeyId;
 
+    @Value("${com.mytiki.bouncer.firebase.key.path}")
+    private String firebaseKeyPath;
+
     public String getSpringProfilesActive() {
         return springProfilesActive;
     }
@@ -51,5 +54,13 @@ public class ConfigProperties {
 
     public void setJwtKeyId(String jwtKeyId) {
         this.jwtKeyId = jwtKeyId;
+    }
+
+    public String getFirebaseKeyPath() {
+        return firebaseKeyPath;
+    }
+
+    public void setFirebaseKeyPath(String firebaseKeyPath) {
+        this.firebaseKeyPath = firebaseKeyPath;
     }
 }

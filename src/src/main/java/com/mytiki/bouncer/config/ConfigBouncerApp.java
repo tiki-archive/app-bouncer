@@ -9,6 +9,7 @@ import com.mytiki.bouncer.utilities.UtilitiesConfig;
 import com.mytiki.common.exception.ApiExceptionHandlerDefault;
 import com.mytiki.common.reply.ApiReplyHandlerDefault;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
@@ -21,6 +22,7 @@ import java.util.TimeZone;
         ConfigFeatures.class,
         ConfigSecurity.class
 })
+@EnableScheduling
 public class ConfigBouncerApp {
 
     @PostConstruct
