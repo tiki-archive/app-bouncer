@@ -86,7 +86,7 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
                                 JwtController.PATH_CONTROLLER + JwtController.PATH_OTP
                         ).permitAll()
                         .antMatchers(
-                                ApiConstants.ADMIN_ROUTE + "health", ApiConstants.ADMIN_ROUTE + "error"
+                                HttpMethod.GET, ApiConstants.HEALTH_ROUTE
                         ).permitAll()
                         .anyRequest()
                         .authenticated()

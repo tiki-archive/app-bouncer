@@ -28,4 +28,9 @@ public class UtilitiesConfig {
     public AuthenticationEntryPoint authEntryPointImplException(@Autowired ObjectMapper objectMapper){
         return new AuthEntryPointImplException(objectMapper);
     }
+
+    @Bean
+    public HealthCheckController healthCheckController(){
+        return new HealthCheckController();
+    }
 }
