@@ -28,12 +28,12 @@ public class OtpController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = PATH_EMAIL)
-    public ApiReplyAO<OtpAOIssueRsp> postIssueEmail(@RequestBody OtpAOIssueEmail body){
+    public ApiReplyAO<OtpAORsp> postIssueEmail(@RequestBody OtpAOIssueEmail body){
         return ApiReplyAOFactory.ok(otpService.issue(body));
     }
 
     @RequestMapping(method = RequestMethod.POST, path = PATH_PUSH)
-    public ApiReplyAO<OtpAOIssueRsp> postIssuePush(@RequestBody OtpAOIssuePush body){
+    public ApiReplyAO<OtpAORsp> postIssuePush(@RequestBody OtpAOIssuePush body){
         return ApiReplyAOFactory.ok(otpService.issue(body));
     }
 }

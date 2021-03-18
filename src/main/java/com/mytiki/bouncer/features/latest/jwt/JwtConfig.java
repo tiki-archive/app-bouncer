@@ -14,8 +14,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.io.IOException;
-import java.text.ParseException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @EnableJpaRepositories(JwtConfig.PACKAGE_PATH)
 @EntityScan(JwtConfig.PACKAGE_PATH)
@@ -33,8 +33,7 @@ public class JwtConfig {
             @Autowired ConfigProperties properties,
             @Autowired JwtRepository jwtRepository,
             @Autowired OtpService otpService
-    ) throws
-            IOException, ParseException, JOSEException {
-        return new JwtService(properties.getJwtKeyPath(), properties.getJwtKeyId(), jwtRepository, otpService);
+    ) throws JOSEException, InvalidKeySpecException, NoSuchAlgorithmException {
+        return new JwtService(properties.getJwtKey(), jwtRepository, otpService);
     }
 }

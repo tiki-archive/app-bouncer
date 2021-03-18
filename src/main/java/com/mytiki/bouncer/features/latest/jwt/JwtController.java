@@ -28,12 +28,12 @@ public class JwtController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = PATH_REFRESH)
-    public ApiReplyAO<JwtAO> postRefresh(@RequestBody JwtAORefresh body){
+    public ApiReplyAO<JwtAORsp> postRefresh(@RequestBody JwtAORefresh body){
         return ApiReplyAOFactory.ok(jwtService.refreshGrant(body));
     }
 
     @RequestMapping(method = RequestMethod.POST, path = PATH_OTP)
-    public ApiReplyAO<JwtAO> postRefresh(@RequestBody JwtAOOtp body){
+    public ApiReplyAO<JwtAORsp> postRefresh(@RequestBody JwtAOOtp body){
         return ApiReplyAOFactory.ok(jwtService.otpGrant(body));
     }
 }

@@ -56,7 +56,7 @@ public class OtpService {
         this.firebaseMessagingHelper = firebaseMessagingHelper;
     }
 
-    public OtpAOIssueRsp issue(OtpAOIssueEmail otpAOIssueEmail){
+    public OtpAORsp issue(OtpAOIssueEmail otpAOIssueEmail){
         Map<String, String> newOtpMap = generateNewOtp();
 
         HashMap<String, String> templateDataMap = new HashMap<>(1);
@@ -72,7 +72,7 @@ public class OtpService {
         else throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, FAILED_EMAIL_MSG);
     }
 
-    public OtpAOIssueRsp issue(OtpAOIssuePush otpAOIssuePush){
+    public OtpAORsp issue(OtpAOIssuePush otpAOIssuePush){
         Map<String, String> newOtpMap = generateNewOtp();
 
         Message push = Message
@@ -134,7 +134,7 @@ public class OtpService {
         return response;
     }
 
-    private OtpAOIssueRsp issue(String otp, String salt){
+    private OtpAORsp issue(String otp, String salt){
         OtpDO otpDO = new OtpDO();
 
         try {
@@ -149,11 +149,11 @@ public class OtpService {
         otpDO.setExpires(now.plusMinutes(EXPIRY_DURATION_MINUTES));
         OtpDO savedDO = otpRepository.save(otpDO);
 
-        OtpAOIssueRsp otpAOIssueRsp = new OtpAOIssueRsp();
-        otpAOIssueRsp.setSalt(salt);
-        otpAOIssueRsp.setExpires(savedDO.getExpires());
-        otpAOIssueRsp.setIssued(savedDO.getIssued());
-        return otpAOIssueRsp;
+        OtpAORsp otpAORsp = new OtpAORsp();
+        otpAORsp.setSalt(salt);
+        otpAORsp.setExpires(savedDO.getExpires());
+        otpAORsp.setIssued(savedDO.getIssued());
+        return otpAORsp;
     }
 
     private String sha512(String raw, String salt) throws NoSuchAlgorithmException {

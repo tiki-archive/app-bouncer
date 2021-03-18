@@ -5,7 +5,7 @@
 
 package com.mytiki.bouncer.features.latest.jwt;
 
-public class JwtAO {
+public class JwtAORsp {
 
     private String accessToken;
     private String tokenType;

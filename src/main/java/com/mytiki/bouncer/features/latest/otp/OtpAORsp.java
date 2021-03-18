@@ -7,7 +7,7 @@ package com.mytiki.bouncer.features.latest.otp;
 
 import java.time.ZonedDateTime;
 
-public class OtpAOIssueRsp {
+public class OtpAORsp {
 
     private String salt;
     private ZonedDateTime issued;
