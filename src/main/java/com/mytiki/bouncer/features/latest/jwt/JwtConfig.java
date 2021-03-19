@@ -34,6 +34,6 @@ public class JwtConfig {
             @Autowired JwtRepository jwtRepository,
             @Autowired OtpService otpService
     ) throws JOSEException, InvalidKeySpecException, NoSuchAlgorithmException {
-        return new JwtService(properties.getJwtKey(), jwtRepository, otpService);
+        return new JwtService(properties.getJwtPrivateKey(), jwtRepository, otpService);
     }
 }

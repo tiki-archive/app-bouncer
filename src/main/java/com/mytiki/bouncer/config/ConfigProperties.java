@@ -15,8 +15,8 @@ public class ConfigProperties {
     @Value("${com.mytiki.bouncer.sendgrid.apikey}")
     private String sendgridApiKey;
 
-    @Value("${com.mytiki.bouncer.jwt.key}")
-    private String jwtKey;
+    @Value("${com.mytiki.bouncer.jwt.private_key}")
+    private String jwtPrivateKey;
 
     @Value("${com.mytiki.bouncer.firebase.key.path}")
     private String firebaseKeyPath;
@@ -37,12 +37,12 @@ public class ConfigProperties {
         this.sendgridApiKey = sendgridApiKey;
     }
 
-    public String getJwtKey() {
-        return jwtKey;
+    public String getJwtPrivateKey() {
+        return jwtPrivateKey;
     }
 
-    public void setJwtKey(String jwtKey) {
-        this.jwtKey = jwtKey;
+    public void setJwtPrivateKey(String jwtPrivateKey) {
+        this.jwtPrivateKey = jwtPrivateKey;
     }
 
     public String getFirebaseKeyPath() {

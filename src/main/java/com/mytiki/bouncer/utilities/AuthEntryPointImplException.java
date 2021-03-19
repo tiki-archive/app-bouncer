@@ -7,14 +7,12 @@ package com.mytiki.bouncer.utilities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mytiki.common.reply.ApiReplyAO;
-import com.mytiki.common.reply.ApiReplyAOBuilder;
-import com.mytiki.common.reply.ApiReplyAOMessageBuilder;
+import com.mytiki.common.reply.ApiReplyAOFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,16 +31,8 @@ public class AuthEntryPointImplException implements AuthenticationEntryPoint {
             HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse,
             AuthenticationException e
-    ) throws IOException, ServletException {
-
-        ApiReplyAO<?> reply = new ApiReplyAOBuilder<>()
-                .httpStatus(HttpStatus.UNAUTHORIZED)
-                .messages(
-                        new ApiReplyAOMessageBuilder()
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .build()
-                ).build();
-
+    ) throws IOException {
+        ApiReplyAO<?> reply = ApiReplyAOFactory.error(HttpStatus.UNAUTHORIZED);
         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
