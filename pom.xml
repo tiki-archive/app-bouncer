@@ -27,7 +27,7 @@
     <properties>
         <start-class>com.mytiki.bouncer.main.BouncerApp</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>15</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>
