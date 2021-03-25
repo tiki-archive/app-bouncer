@@ -8,7 +8,7 @@
 -- -----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS otp(
     id BIGSERIAL NOT NULL,
-    hashed_otp TEXT NOT NULL UNIQUE,
+    otp_hashed TEXT NOT NULL UNIQUE,
     issued_utc TIMESTAMP WITH TIME ZONE NOT NULL,
     expires_utc TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY(id)

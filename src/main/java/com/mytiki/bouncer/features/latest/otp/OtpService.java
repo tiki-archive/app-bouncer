@@ -34,7 +34,7 @@ public class OtpService {
     private final OtpTemplate otpTemplate;
     private final FirebaseMessagingHelper firebaseMessagingHelper;
 
-    private static final Long EXPIRY_DURATION_MINUTES = 3L;
+    private static final Long EXPIRY_DURATION_MINUTES = 60L;
     private static final String KEY_OTP = "otp";
     private static final String KEY_SALT = "salt";
     private static final String FAILED_AUTHENTICATE_MSG = "Failed to redeem One-time Password (OTP)";
@@ -60,7 +60,7 @@ public class OtpService {
         Map<String, String> newOtpMap = generateNewOtp();
 
         HashMap<String, String> templateDataMap = new HashMap<>(1);
-        templateDataMap.put("link", "https://mytiki.com/" + newOtpMap.get(KEY_OTP));
+        templateDataMap.put("link", "tiki://bouncer?otp=" + newOtpMap.get(KEY_OTP));
 
         boolean emailSuccess = sendgridHelper.send(
                 otpAOIssueEmail.getEmail(),
