@@ -5,6 +5,7 @@
 
 package com.mytiki.bouncer.features.latest.otp;
 
+import com.google.common.base.Charsets;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.lang.invoke.MethodHandles;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -58,9 +60,11 @@ public class OtpService {
 
     public OtpAORsp issue(OtpAOIssueEmail otpAOIssueEmail){
         Map<String, String> newOtpMap = generateNewOtp();
+        String path = "bouncer?otp=" + newOtpMap.get(KEY_OTP);
 
         HashMap<String, String> templateDataMap = new HashMap<>(1);
-        templateDataMap.put("link", "tiki://bouncer?otp=" + newOtpMap.get(KEY_OTP));
+        templateDataMap.put("link-fallback", "https://mytiki.com/deeplink/?redirect=" +
+                        URLEncoder.encode(path, Charsets.UTF_8));
 
         boolean emailSuccess = sendgridHelper.send(
                 otpAOIssueEmail.getEmail(),
