@@ -33,7 +33,7 @@ public class JwtService {
     private final JWSSigner signer;
     private final JwtRepository jwtRepository;
     private final OtpService otpService;
-    private static final Duration BEARER_DURATION = Duration.ofMinutes(5);
+    private static final Duration BEARER_DURATION = Duration.ofMinutes(60);
     private static final Duration REFRESH_DURATION = Duration.ofDays(30);
 
     private static final String FAILED_GRANT_MSG = "Failed to grant JWT";

@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM azul/zulu-openjdk:11
 VOLUME /tmp
 VOLUME /target
 

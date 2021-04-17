@@ -60,11 +60,17 @@ public class OtpService {
 
     public OtpAORsp issue(OtpAOIssueEmail otpAOIssueEmail){
         Map<String, String> newOtpMap = generateNewOtp();
-        String path = "bouncer?otp=" + newOtpMap.get(KEY_OTP);
+        String path = "https://mytiki.com/app/bouncer?otp=" + newOtpMap.get(KEY_OTP);
 
         HashMap<String, String> templateDataMap = new HashMap<>(1);
-        templateDataMap.put("link-fallback", "https://mytiki.com/deeplink/?redirect=" +
-                        URLEncoder.encode(path, Charsets.UTF_8));
+        templateDataMap.put("dynamic-link",
+                "https://mytiki.app/?link=" +  URLEncoder.encode(path, Charsets.UTF_8) +
+                        "&apn=com.mytiki.app" +
+                        //"&isi=1560250866" + disabled while using TF with ifl
+                        "&ibi=com.mytiki.app" +
+                        "&ifl=" + URLEncoder.encode("https://testflight.apple.com/join/pUcjaGK8",Charsets.UTF_8) +
+                        "&afl=" + URLEncoder.encode("https://play.google.com/store/apps/details?id=com.mytiki.app",Charsets.UTF_8) +
+                        "&ofl=" + URLEncoder.encode("https://mytiki.com/app",Charsets.UTF_8));
 
         boolean emailSuccess = sendgridHelper.send(
                 otpAOIssueEmail.getEmail(),
