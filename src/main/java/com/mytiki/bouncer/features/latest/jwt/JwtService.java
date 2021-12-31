@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class JwtService {
-
     private final JWSSigner signer;
     private final JwtRepository jwtRepository;
     private final OtpService otpService;

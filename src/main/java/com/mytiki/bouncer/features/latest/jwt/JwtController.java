@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = JwtController.PATH_CONTROLLER)
 public class JwtController {
-
     public static final String PATH_CONTROLLER = ApiConstants.API_LATEST_ROUTE + "jwt";
     public static final String PATH_REFRESH = "/refresh";
     public static final String PATH_OTP = "/otp";
