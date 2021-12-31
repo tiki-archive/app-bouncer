@@ -5,6 +5,7 @@
 
 package com.mytiki.bouncer.config;
 
+import com.mytiki.bouncer.features.latest.bkup.BkupController;
 import com.mytiki.bouncer.features.latest.jwt.JwtController;
 import com.mytiki.bouncer.features.latest.otp.OtpController;
 import com.mytiki.common.ApiConstants;
@@ -81,9 +82,9 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
                         .antMatchers(
                                 HttpMethod.POST,
                                 OtpController.PATH_CONTROLLER + OtpController.PATH_EMAIL,
-                                OtpController.PATH_CONTROLLER + OtpController.PATH_PUSH,
                                 JwtController.PATH_CONTROLLER + JwtController.PATH_REFRESH,
-                                JwtController.PATH_CONTROLLER + JwtController.PATH_OTP
+                                JwtController.PATH_CONTROLLER + JwtController.PATH_OTP,
+                                BkupController.PATH_CONTROLLER + BkupController.PATH_FIND
                         ).permitAll()
                         .antMatchers(
                                 HttpMethod.GET, ApiConstants.HEALTH_ROUTE

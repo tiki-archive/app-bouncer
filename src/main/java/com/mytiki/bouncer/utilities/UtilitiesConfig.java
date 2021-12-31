@@ -12,18 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import java.io.IOException;
-
 public class UtilitiesConfig {
 
     @Bean
     public SendgridHelper sendgridHelper(@Autowired ConfigProperties properties){
         return new SendgridHelper(properties.getSendgridApiKey());
-    }
-
-    @Bean
-    public FirebaseMessagingHelper firebaseMessagingHelper(@Autowired ConfigProperties properties) throws IOException {
-        return new FirebaseMessagingHelper(properties.getFirebaseKeyPath());
     }
 
     @Bean
