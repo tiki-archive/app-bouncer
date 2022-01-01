@@ -8,14 +8,14 @@ package com.mytiki.bouncer.features.latest.bkup;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class BkupAOReqUpsert {
+public class BkupAOReqAdd {
 
     private String email;
     private String pin;
     private String ciphertext;
 
     @JsonCreator
-    public BkupAOReqUpsert(
+    public BkupAOReqAdd(
             @JsonProperty(required = true) String email,
             @JsonProperty(required = true) String pin,
             @JsonProperty(required = true) String ciphertext)

@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class BkupController {
 
     public static final String PATH_CONTROLLER = ApiConstants.API_LATEST_ROUTE + "backup";
-    public static final String PATH_UPSERT = "/upsert";
+    public static final String PATH_ADD = "/add";
+    public static final String PATH_UPDATE = "/update";
     public static final String PATH_FIND = "/find";
 
     private final BkupService bkupService;
@@ -27,9 +28,15 @@ public class BkupController {
         this.bkupService = bkupService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = PATH_UPSERT)
-    public ApiReplyAO<?> upsert(@RequestBody BkupAOReqUpsert body){
-        bkupService.upsert(body);
+    @RequestMapping(method = RequestMethod.POST, path = PATH_ADD)
+    public ApiReplyAO<?> add(@RequestBody BkupAOReqAdd body){
+        bkupService.add(body);
+        return ApiReplyAOFactory.ok();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = PATH_UPDATE)
+    public ApiReplyAO<?> update(@RequestBody BkupAOReqUpdate body){
+        bkupService.update(body);
         return ApiReplyAOFactory.ok();
     }
 

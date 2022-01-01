@@ -84,7 +84,9 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
                                 OtpController.PATH_CONTROLLER + OtpController.PATH_EMAIL,
                                 JwtController.PATH_CONTROLLER + JwtController.PATH_REFRESH,
                                 JwtController.PATH_CONTROLLER + JwtController.PATH_OTP,
-                                BkupController.PATH_CONTROLLER + BkupController.PATH_FIND
+                                BkupController.PATH_CONTROLLER + BkupController.PATH_FIND,
+                                BkupController.PATH_CONTROLLER + BkupController.PATH_ADD,
+                                BkupController.PATH_CONTROLLER + BkupController.PATH_UPDATE
                         ).permitAll()
                         .antMatchers(
                                 HttpMethod.GET, ApiConstants.HEALTH_ROUTE
