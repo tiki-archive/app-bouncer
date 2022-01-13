@@ -18,6 +18,9 @@ public class ConfigProperties {
     @Value("${com.mytiki.bouncer.jwt.private_key}")
     private String jwtPrivateKey;
 
+    @Value("${com.mytiki.bouncer.jwt.public_key}")
+    private String jwtPublicKey;
+
     @Value("${com.mytiki.bouncer.firebase.key.path}")
     private String firebaseKeyPath;
 
@@ -43,6 +46,14 @@ public class ConfigProperties {
 
     public void setJwtPrivateKey(String jwtPrivateKey) {
         this.jwtPrivateKey = jwtPrivateKey;
+    }
+
+    public String getJwtPublicKey() {
+        return jwtPublicKey;
+    }
+
+    public void setJwtPublicKey(String jwtPublicKey) {
+        this.jwtPublicKey = jwtPublicKey;
     }
 
     public String getFirebaseKeyPath() {

@@ -19,7 +19,6 @@ public class OtpController {
 
     public static final String PATH_CONTROLLER = ApiConstants.API_LATEST_ROUTE + "otp";
     public static final String PATH_EMAIL = "/email";
-    public static final String PATH_PUSH = "/push";
 
     private final OtpService otpService;
 
@@ -29,11 +28,6 @@ public class OtpController {
 
     @RequestMapping(method = RequestMethod.POST, path = PATH_EMAIL)
     public ApiReplyAO<OtpAORsp> postIssueEmail(@RequestBody OtpAOIssueEmail body){
-        return ApiReplyAOFactory.ok(otpService.issue(body));
-    }
-
-    @RequestMapping(method = RequestMethod.POST, path = PATH_PUSH)
-    public ApiReplyAO<OtpAORsp> postIssuePush(@RequestBody OtpAOIssuePush body){
         return ApiReplyAOFactory.ok(otpService.issue(body));
     }
 }

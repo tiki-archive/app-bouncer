@@ -5,11 +5,6 @@
 
 package com.mytiki.bouncer.features.latest.otp;
 
-import com.google.common.base.Charsets;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
-import com.mytiki.bouncer.utilities.FirebaseMessagingHelper;
 import com.mytiki.bouncer.utilities.SendgridHelper;
 import com.mytiki.common.exception.ApiExceptionFactory;
 import org.apache.commons.codec.binary.Hex;
@@ -34,7 +29,6 @@ public class OtpService {
     private final OtpRepository otpRepository;
     private final SendgridHelper sendgridHelper;
     private final OtpTemplate otpTemplate;
-    private final FirebaseMessagingHelper firebaseMessagingHelper;
 
     private static final Long EXPIRY_DURATION_MINUTES = 60L;
     private static final String KEY_OTP = "otp";
@@ -42,29 +36,32 @@ public class OtpService {
     private static final String FAILED_AUTHENTICATE_MSG = "Failed to redeem One-time Password (OTP)";
     private static final String FAILED_ISSUE_MSG = "Failed to issue a secure One-time Password (OTP)";
     private static final String FAILED_EMAIL_MSG = "Failed to send email";
-    private static final String FAILED_PUSH_MSG = "Failed to send push notification";
     private static final String INVALID_OTP_MSG = "Invalid One-time Password (OTP).";
     private static final String EXPIRED_OTP_MSG = "One-time Password (OTP) expired. Re-issue and try again.";
 
     public OtpService(
             OtpRepository otpRepository,
             SendgridHelper sendgridHelper,
-            OtpTemplate otpTemplate,
-            FirebaseMessagingHelper firebaseMessagingHelper
+            OtpTemplate otpTemplate
     ) {
         this.otpRepository = otpRepository;
         this.sendgridHelper = sendgridHelper;
         this.otpTemplate = otpTemplate;
-        this.firebaseMessagingHelper = firebaseMessagingHelper;
     }
 
     public OtpAORsp issue(OtpAOIssueEmail otpAOIssueEmail){
         Map<String, String> newOtpMap = generateNewOtp();
-        String path = "bouncer?otp=" + newOtpMap.get(KEY_OTP);
+        String path = "https://mytiki.com/app/bouncer?otp=" + newOtpMap.get(KEY_OTP);
 
         HashMap<String, String> templateDataMap = new HashMap<>(1);
-        templateDataMap.put("link-fallback", "https://mytiki.com/deeplink/?redirect=" +
-                        URLEncoder.encode(path, Charsets.UTF_8));
+        templateDataMap.put("dynamic-link",
+                "https://mytiki.app/?link=" +  URLEncoder.encode(path, StandardCharsets.UTF_8) +
+                        "&apn=com.mytiki.app" +
+                        //"&isi=1560250866" + disabled while using TF with ifl
+                        "&ibi=com.mytiki.app" +
+                        "&ifl=" + URLEncoder.encode("https://testflight.apple.com/join/pUcjaGK8",StandardCharsets.UTF_8) +
+                        "&afl=" + URLEncoder.encode("https://play.google.com/store/apps/details?id=com.mytiki.app",StandardCharsets.UTF_8) +
+                        "&ofl=" + URLEncoder.encode("https://mytiki.com/app",StandardCharsets.UTF_8));
 
         boolean emailSuccess = sendgridHelper.send(
                 otpAOIssueEmail.getEmail(),
@@ -74,30 +71,6 @@ public class OtpService {
 
         if(emailSuccess) return issue(newOtpMap.get(KEY_OTP), newOtpMap.get(KEY_SALT));
         else throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, FAILED_EMAIL_MSG);
-    }
-
-    public OtpAORsp issue(OtpAOIssuePush otpAOIssuePush){
-        Map<String, String> newOtpMap = generateNewOtp();
-
-        Message push = Message
-                .builder()
-                .setToken(otpAOIssuePush.getDeviceToken())
-                .setNotification(Notification
-                        .builder()
-                        .setBody(otpTemplate.renderPushBodyText(null))
-                        .setTitle(otpTemplate.renderPushTitleText(null))
-                        .build())
-                .putData("TIKI.OTP", newOtpMap.get(KEY_OTP))
-                .build();
-
-        try{
-            firebaseMessagingHelper.send(push);
-        } catch (FirebaseMessagingException e) {
-            logger.error("Error sending push notification", e);
-            throw ApiExceptionFactory.exception(HttpStatus.UNPROCESSABLE_ENTITY, FAILED_PUSH_MSG);
-        }
-
-        return issue(newOtpMap.get(KEY_OTP), newOtpMap.get(KEY_SALT));
     }
 
     public void redeem(String otp, String salt){
@@ -168,8 +141,11 @@ public class OtpService {
     }
 
     @Scheduled(fixedDelay = 1000*60*60*24) //24hrs
-    private void prune(){
+    void prune(){
         List<OtpDO> expired = otpRepository.findAllByExpiresBefore(ZonedDateTime.now(ZoneOffset.UTC));
-        otpRepository.deleteInBatch(expired);
+        for(int i=0; i<expired.size(); i+=1000){
+            int end = Math.min((i + 1000), expired.size());
+            otpRepository.deleteAllInBatch(expired.subList(i, end));
+        }
     }
 }

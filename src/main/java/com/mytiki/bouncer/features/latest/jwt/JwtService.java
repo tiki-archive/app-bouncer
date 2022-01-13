@@ -29,11 +29,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class JwtService {
-
     private final JWSSigner signer;
     private final JwtRepository jwtRepository;
     private final OtpService otpService;
-    private static final Duration BEARER_DURATION = Duration.ofMinutes(5);
+    private static final Duration BEARER_DURATION = Duration.ofMinutes(60);
     private static final Duration REFRESH_DURATION = Duration.ofDays(30);
 
     private static final String FAILED_GRANT_MSG = "Failed to grant JWT";
@@ -114,6 +113,9 @@ public class JwtService {
     @Scheduled(fixedDelay = 1000*60*60*24) //24hrs
     private void prune(){
         List<JwtDO> expired = jwtRepository.findAllByExpiresBefore(ZonedDateTime.now(ZoneOffset.UTC));
-        jwtRepository.deleteInBatch(expired);
+        for(int i=0; i<expired.size(); i+=1000){
+            int end = Math.min((i + 1000), expired.size());
+            jwtRepository.deleteAllInBatch(expired.subList(i, end));
+        }
     }
 }
