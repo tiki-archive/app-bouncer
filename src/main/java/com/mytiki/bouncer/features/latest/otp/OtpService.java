@@ -141,8 +141,11 @@ public class OtpService {
     }
 
     @Scheduled(fixedDelay = 1000*60*60*24) //24hrs
-    private void prune(){
+    void prune(){
         List<OtpDO> expired = otpRepository.findAllByExpiresBefore(ZonedDateTime.now(ZoneOffset.UTC));
-        otpRepository.deleteInBatch(expired);
+        for(int i=0; i<expired.size(); i+=1000){
+            int end = Math.min((i + 1000), expired.size());
+            otpRepository.deleteAllInBatch(expired.subList(i, end));
+        }
     }
 }
