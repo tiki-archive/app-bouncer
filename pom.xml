@@ -12,7 +12,7 @@
 
     <groupId>com.mytiki</groupId>
     <artifactId>bouncer</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <packaging>jar</packaging>
 
     <name>bouncer</name>
