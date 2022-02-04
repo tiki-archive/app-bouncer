@@ -38,3 +38,14 @@ CREATE TABLE IF NOT EXISTS bkup(
     lock_code TEXT,
     PRIMARY KEY(id)
 );
+
+-- -----------------------------------------------------------------------
+-- SHORT CODE
+-- -----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS short_code(
+       id BIGSERIAL NOT NULL,
+       short_code TEXT,
+       address TEXT,
+       created_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+       PRIMARY KEY(id)
+);
