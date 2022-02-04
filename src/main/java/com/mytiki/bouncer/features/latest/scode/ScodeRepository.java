@@ -7,9 +7,10 @@ package com.mytiki.bouncer.features.latest.scode;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ScodeRepository extends JpaRepository<ScodeDO, Long> {
-    Optional<ScodeDO> findByAddress(String address);
+    List<ScodeDO> findByAddress(String address);
     Optional<ScodeDO> findByShortCode(String shortCode);
 }
