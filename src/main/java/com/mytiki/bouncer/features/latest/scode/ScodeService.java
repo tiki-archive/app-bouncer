@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Character.MAX_RADIX;
@@ -28,18 +29,23 @@ public class ScodeService {
     @Transactional
     public ScodeAORsp get(String address) {
         ScodeAORsp rsp = new ScodeAORsp();
-        Optional<ScodeDO> scodeDOOptional = scodeRepository.findByAddress(address);
-        scodeDOOptional.ifPresentOrElse(
-                scodeDO -> rsp.setCode(scodeDO.getShortCode()),
-                () -> {
-                    ScodeDO scodeDO = new ScodeDO();
-                    scodeDO.setAddress(address);
-                    scodeDO.setCreated(ZonedDateTime.now());
-                    ScodeDO saved = scodeRepository.save(scodeDO);
-                    saved.setShortCode("$" + toAlphaNumeric(saved.getId()));
-                    saved = scodeRepository.save(saved);
-                    rsp.setCode(saved.getShortCode());
-                });
+        List<ScodeDO> scodeDOList = scodeRepository.findByAddress(address);
+        if(scodeDOList.size() > 0) {
+            ScodeDO scodeDO = scodeDOList.get(0);
+            for(ScodeDO sdo : scodeDOList) {
+                if (sdo.getId() < scodeDO.getId())
+                    scodeDO = sdo;
+            }
+            rsp.setCode(scodeDO.getShortCode());
+        }else{
+            ScodeDO scodeDO = new ScodeDO();
+            scodeDO.setAddress(address);
+            scodeDO.setCreated(ZonedDateTime.now());
+            ScodeDO saved = scodeRepository.save(scodeDO);
+            saved.setShortCode("$" + toAlphaNumeric(saved.getId()));
+            saved = scodeRepository.save(saved);
+            rsp.setCode(saved.getShortCode());
+        }
         return rsp;
     }
 
