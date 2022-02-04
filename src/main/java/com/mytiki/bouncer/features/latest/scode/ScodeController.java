@@ -21,8 +21,8 @@ public class ScodeController {
         this.scodeService = scodeService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{address}")
-    public ApiReplyAO<ScodeAORsp> get(@PathVariable String address){
+    @RequestMapping(method = RequestMethod.GET)
+    public ApiReplyAO<ScodeAORsp> get(@RequestParam String address){
         return ApiReplyAOFactory.ok(scodeService.get(address));
     }
 
