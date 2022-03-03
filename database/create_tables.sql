@@ -43,9 +43,20 @@ CREATE TABLE IF NOT EXISTS bkup(
 -- SHORT CODE
 -- -----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS short_code(
-       id BIGSERIAL NOT NULL,
-       short_code TEXT,
-       address TEXT,
-       created_utc TIMESTAMP WITH TIME ZONE NOT NULL,
-       PRIMARY KEY(id)
+    id BIGSERIAL NOT NULL,
+    short_code TEXT,
+    address TEXT,
+    created_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+    PRIMARY KEY(id)
+);
+
+-- -----------------------------------------------------------------------
+-- REFER CODE
+-- -----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS referral_code(
+    id BIGSERIAL NOT NULL,
+    code TEXT NOT NULL,
+    referred bytea NOT NULL UNIQUE,
+    created_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+    PRIMARY KEY(id)
 );
