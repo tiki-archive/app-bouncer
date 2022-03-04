@@ -7,6 +7,7 @@ package com.mytiki.bouncer.config;
 
 import com.mytiki.bouncer.features.latest.jwt.JwtController;
 import com.mytiki.bouncer.features.latest.otp.OtpController;
+import com.mytiki.bouncer.features.latest.rcode.RcodeController;
 import com.mytiki.common.ApiConstants;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -104,10 +105,13 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
                                 HttpMethod.POST,
                                 OtpController.PATH_CONTROLLER + OtpController.PATH_EMAIL,
                                 JwtController.PATH_CONTROLLER + JwtController.PATH_REFRESH,
-                                JwtController.PATH_CONTROLLER + JwtController.PATH_OTP
+                                JwtController.PATH_CONTROLLER + JwtController.PATH_OTP,
+                                RcodeController.PATH_CONTROLLER
                         ).permitAll()
                         .antMatchers(
-                                HttpMethod.GET, ApiConstants.HEALTH_ROUTE
+                                HttpMethod.GET,
+                                ApiConstants.HEALTH_ROUTE,
+                                RcodeController.PATH_CONTROLLER
                         ).permitAll()
                         .anyRequest()
                         .authenticated()
