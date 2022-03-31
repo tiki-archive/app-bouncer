@@ -17,7 +17,6 @@ import java.security.Security;
 import java.util.TimeZone;
 
 @Import({
-        ConfigProperties.class,
         ApiExceptionHandlerDefault.class,
         ApiReplyHandlerDefault.class,
         UtilitiesConfig.class,

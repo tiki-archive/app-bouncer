@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 public class SendgridHelper {
-
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String FROM_ADDRESS = "app@mytiki.com";
     private static final String FROM_NAME = "TIKI";
