@@ -5,15 +5,17 @@
 
 package com.mytiki.bouncer;
 
-import com.mytiki.bouncer.features.latest.sync.SyncAORegisterReq;
-import com.mytiki.bouncer.features.latest.sync.SyncDO;
-import com.mytiki.bouncer.features.latest.sync.SyncRepository;
-import com.mytiki.bouncer.features.latest.sync.SyncService;
+import com.mytiki.bouncer.features.latest.sync.*;
 import com.mytiki.bouncer.main.BouncerApp;
 import com.mytiki.common.exception.ApiException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.asn1.*;
+import org.bouncycastle.crypto.CryptoException;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.params.RSAKeyParameters;
+import org.bouncycastle.crypto.signers.RSADigestSigner;
+import org.bouncycastle.jcajce.provider.asymmetric.rsa.BCRSAPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.rsa.BCRSAPublicKey;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -29,8 +31,7 @@ import java.security.*;
 import java.util.Base64;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -49,7 +50,7 @@ public class SyncTest {
 
     @Test
     public void Test_Register_Success() throws Exception {
-        BCRSAPublicKey pubKey = generateKey();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) (generateKeyPair().getPublic());
         String address = deriveAddress(pubKey);
         SyncAORegisterReq req = new SyncAORegisterReq(address, encode(pubKey));
         syncService.register(req);
@@ -59,7 +60,7 @@ public class SyncTest {
 
     @Test
     public void Test_Register_Fail_Duplicate() throws Exception {
-        BCRSAPublicKey pubKey = generateKey();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) (generateKeyPair().getPublic());
         String address = deriveAddress(pubKey);
         SyncAORegisterReq req = new SyncAORegisterReq(address, encode(pubKey));
         syncService.register(req);
@@ -70,7 +71,7 @@ public class SyncTest {
 
     @Test
     public void Test_Register_Fail_BadKey() throws Exception {
-        BCRSAPublicKey pubKey = generateKey();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) (generateKeyPair().getPublic());
         String address = deriveAddress(pubKey);
         SyncAORegisterReq req = new SyncAORegisterReq(address, "dummy");
         assertThrows(ApiException.class, () -> {
@@ -80,18 +81,75 @@ public class SyncTest {
 
     @Test
     public void Test_Register_Fail_Mismatch() throws Exception {
-        BCRSAPublicKey pubKey = generateKey();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) (generateKeyPair().getPublic());
         SyncAORegisterReq req = new SyncAORegisterReq("dummy", encode(pubKey));
         assertThrows(ApiException.class, () -> {
             syncService.register(req);
         });
     }
 
-    private BCRSAPublicKey generateKey() throws NoSuchAlgorithmException, NoSuchProviderException {
+    @Test
+    public void Test_Policy_Success() throws Exception {
+        KeyPair keyPair =  generateKeyPair();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) keyPair.getPublic();
+        BCRSAPrivateKey privKey = (BCRSAPrivateKey) keyPair.getPrivate();
+
+        String address = deriveAddress(pubKey);
+        SyncAORegisterReq req = new SyncAORegisterReq(address, encode(pubKey));
+        syncService.register(req);
+
+        String dummy = "dummy";
+        String signature = sign(privKey, dummy);
+
+        SyncAOPolicyReq policyReq = new SyncAOPolicyReq(address, dummy, signature);
+        SyncAOPolicyRsp policyRsp = syncService.policy(policyReq);
+
+        assertNotNull(policyRsp);
+        assertNotNull(policyRsp.getPolicy());
+        assertNotNull(policyRsp.getAccountId());
+        assertNotNull(policyRsp.getDate());
+        assertNotNull(policyRsp.getSignature());
+    }
+
+    @Test
+    public void Test_Policy_Fail_BadSignature() throws Exception {
+        KeyPair keyPair =  generateKeyPair();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) keyPair.getPublic();
+
+        String address = deriveAddress(pubKey);
+        SyncAORegisterReq req = new SyncAORegisterReq(address, encode(pubKey));
+        syncService.register(req);
+
+        String dummy = "dummy";
+        String signature = "garbage";
+
+        SyncAOPolicyReq policyReq = new SyncAOPolicyReq(address, dummy, signature);
+        assertThrows(ApiException.class, () -> {
+            SyncAOPolicyRsp policyRsp = syncService.policy(policyReq);
+        });
+    }
+
+    @Test
+    public void Test_Policy_Fail_NotRegistered() throws Exception {
+        KeyPair keyPair =  generateKeyPair();
+        BCRSAPublicKey pubKey = (BCRSAPublicKey) keyPair.getPublic();
+        BCRSAPrivateKey privKey = (BCRSAPrivateKey) keyPair.getPrivate();
+
+        String address = deriveAddress(pubKey);
+
+        String dummy = "dummy";
+        String signature = sign(privKey, dummy);
+
+        SyncAOPolicyReq policyReq = new SyncAOPolicyReq(address, dummy, signature);
+        assertThrows(ApiException.class, () -> {
+            SyncAOPolicyRsp policyRsp = syncService.policy(policyReq);
+        });
+    }
+
+    private KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC");
         keyGen.initialize(2048, new SecureRandom());
-        KeyPair key = keyGen.generateKeyPair();
-        return (BCRSAPublicKey) key.getPublic();
+        return keyGen.generateKeyPair();
     }
 
     private String encode(BCRSAPublicKey publicKey) throws IOException {
@@ -130,5 +188,15 @@ public class SyncTest {
         MessageDigest md = MessageDigest.getInstance("SHA3-256");
         byte[] addressBytes = md.digest(Hex.decodeHex(raw));
         return Base64.getEncoder().encodeToString(addressBytes);
+    }
+
+    private String sign(BCRSAPrivateKey privateKey, String plaintext) throws CryptoException {
+        byte[] messageBytes = plaintext.getBytes(StandardCharsets.UTF_8);
+        RSADigestSigner signer = new RSADigestSigner(new SHA256Digest());
+        RSAKeyParameters keyParameters =
+                new RSAKeyParameters(true, privateKey.getModulus(), privateKey.getPrivateExponent());
+        signer.init(true, keyParameters);
+        signer.update(messageBytes, 0, messageBytes.length);
+        return Base64.getEncoder().encodeToString(signer.generateSignature());
     }
 }

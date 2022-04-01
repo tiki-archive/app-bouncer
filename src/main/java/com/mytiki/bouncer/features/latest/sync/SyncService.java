@@ -31,6 +31,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Optional;
 
 public class SyncService {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -91,6 +92,34 @@ public class SyncService {
     }
 
     public SyncAOPolicyRsp policy(SyncAOPolicyReq req) {
+        Optional<SyncDO> optional = repository.findByAddress(req.getAddress());
+        if(optional.isEmpty())
+            throw new ApiExceptionBuilder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .messages(new ApiReplyAOMessageBuilder()
+                            .message("Address not registered")
+                            .properties("address", req.getAddress())
+                            .build())
+                    .build();
+
+        try{
+            RSAPublicKey publicKey = decodeKey(optional.get().getPublicKey());
+            if(!verify(publicKey, req.getStringToSign(), req.getSignature())){
+                throw new ApiExceptionBuilder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .messages(new ApiReplyAOMessageBuilder()
+                                .message("Signature verification vailed")
+                                .properties(
+                                        "address", req.getAddress(),
+                                        "stringToSign", req.getStringToSign(),
+                                        "signature", req.getSignature())
+                                .build())
+                        .build();
+            }
+        }catch (IOException e) {
+            logger.error("Failed to decode publicKey", e);
+            throw ApiExceptionFactory.exception(HttpStatus.EXPECTATION_FAILED, "Failed to decode publicKey");
+        }
         String date = ZonedDateTime.now().toLocalDate().format(DateTimeFormatter.BASIC_ISO_DATE);
         String policy = base64Policy(req.getAddress(), date);
         try {
