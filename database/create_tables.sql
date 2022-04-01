@@ -60,3 +60,14 @@ CREATE TABLE IF NOT EXISTS referral_code(
     created_utc TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY(id)
 );
+
+-- -----------------------------------------------------------------------
+-- SYNC CHAIN
+-- -----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS sync_chain(
+    id BIGSERIAL NOT NULL,
+    address TEXT NOT NULL UNIQUE,
+    public_key TEXT NOT NULL,
+    created_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+    PRIMARY KEY(id)
+);

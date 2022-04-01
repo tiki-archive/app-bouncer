@@ -7,7 +7,9 @@ package com.mytiki.bouncer.features.latest.sync;
 
 import com.mytiki.common.ApiConstants;
 import com.mytiki.common.reply.ApiReplyAO;
+import com.mytiki.common.reply.ApiReplyAOBuilder;
 import com.mytiki.common.reply.ApiReplyAOFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,7 +32,10 @@ public class SyncController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/register")
-    public ApiReplyAO<?> register(){
-        return ApiReplyAOFactory.ok();
+    public ApiReplyAO<?> register(@RequestBody SyncAORegisterReq body){
+        syncService.register(body);
+        return new ApiReplyAOBuilder<>()
+                .httpStatus(HttpStatus.CREATED)
+                .build();
     }
 }
