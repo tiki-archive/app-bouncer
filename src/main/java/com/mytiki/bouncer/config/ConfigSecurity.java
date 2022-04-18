@@ -17,6 +17,7 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import com.nimbusds.jwt.proc.JWTProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -55,18 +56,18 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
     private static final String CONTENT_SECURITY_POLICY = "default-src" + "' self'";
     private final AccessDeniedHandler accessDeniedHandler;
     private final AuthenticationEntryPoint authEntryPointImplException;
-    private final ConfigProperties properties;
+    private final String jwtPublicKey;
 
     public ConfigSecurity(
             @Autowired AccessDeniedHandler accessDeniedHandler,
             @Autowired @Qualifier(value = "authEntryPointImplException")
                     AuthenticationEntryPoint authEntryPointImplException,
-            @Autowired ConfigProperties properties
+            @Value("${com.mytiki.bouncer.jwt.public_key}") String jwtPublicKey
     ) {
         super(true);
         this.accessDeniedHandler = accessDeniedHandler;
         this.authEntryPointImplException = authEntryPointImplException;
-        this.properties = properties;
+        this.jwtPublicKey = jwtPublicKey;
     }
 
     @Override
@@ -134,7 +135,7 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
             DefaultJWTProcessor<SecurityContext> processor = new DefaultJWTProcessor<>();
             EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64
                     .getDecoder()
-                    .decode(properties.getJwtPublicKey()));
+                    .decode(jwtPublicKey));
             PublicKey publicKey = KeyFactory
                     .getInstance("EC")
                     .generatePublic(publicKeySpec);

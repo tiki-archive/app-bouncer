@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 public class SendgridHelper {
-
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String FROM_ADDRESS = "app@mytiki.com";
     private static final String FROM_NAME = "TIKI";
@@ -36,7 +35,7 @@ public class SendgridHelper {
 
     public boolean send(String to, String subject, String htmlContent, String textContent){
         Mail mail = new Mail();
-        mail.setIpPoolId(IP_POOL_ID);
+        //mail.setIpPoolId(IP_POOL_ID);
         mail.setFrom(new Email(FROM_ADDRESS, FROM_NAME));
         mail.setSubject(subject);
 

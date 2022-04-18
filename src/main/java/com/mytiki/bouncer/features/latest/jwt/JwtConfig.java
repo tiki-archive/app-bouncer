@@ -5,11 +5,11 @@
 
 package com.mytiki.bouncer.features.latest.jwt;
 
-import com.mytiki.bouncer.config.ConfigProperties;
 import com.mytiki.bouncer.features.latest.otp.OtpService;
 import com.mytiki.bouncer.utilities.Constants;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -30,10 +30,10 @@ public class JwtConfig {
 
     @Bean
     public JwtService jwtService(
-            @Autowired ConfigProperties properties,
+            @Value("${com.mytiki.bouncer.jwt.private_key}") String jwtPrivateKey,
             @Autowired JwtRepository jwtRepository,
             @Autowired OtpService otpService
     ) throws JOSEException, InvalidKeySpecException, NoSuchAlgorithmException {
-        return new JwtService(properties.getJwtPrivateKey(), jwtRepository, otpService);
+        return new JwtService(jwtPrivateKey, jwtRepository, otpService);
     }
 }

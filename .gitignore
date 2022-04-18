@@ -30,8 +30,8 @@ hs_err_pid*
 /target/
 
 # Property files
-application-*.properties
-!application-*.template.properties
+application-local*.properties
+!application-local*.template.properties
 
 # Fuckin Macs
 .DS_Store

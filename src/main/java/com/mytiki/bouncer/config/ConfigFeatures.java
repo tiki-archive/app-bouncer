@@ -10,6 +10,7 @@ import com.mytiki.bouncer.features.latest.jwt.JwtConfig;
 import com.mytiki.bouncer.features.latest.otp.OtpConfig;
 import com.mytiki.bouncer.features.latest.rcode.RcodeConfig;
 import com.mytiki.bouncer.features.latest.scode.ScodeConfig;
+import com.mytiki.bouncer.features.latest.sync.SyncConfig;
 import org.springframework.context.annotation.Import;
 
 @Import({
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Import;
         JwtConfig.class,
         BkupConfig.class,
         ScodeConfig.class,
-        RcodeConfig.class
+        RcodeConfig.class,
+        SyncConfig.class
 })
 public class ConfigFeatures {}
