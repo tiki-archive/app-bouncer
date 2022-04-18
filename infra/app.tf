@@ -6,11 +6,11 @@ resource "digitalocean_app" "bouncer-app" {
     name   = "bouncer"
     region = local.region
 
-    #domain {
-    #name = "bouncer.mytiki.com"
-    #type = "PRIMARY"
-    #zone = "bouncer.mytiki.com"
-    #}
+    domain {
+      name = "bouncer.mytiki.com"
+      type = "PRIMARY"
+      zone = "bouncer.mytiki.com"
+    }
 
     service {
       name               = "bouncer-service"
