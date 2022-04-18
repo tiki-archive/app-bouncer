@@ -127,7 +127,7 @@ public class SyncService {
             SyncAOPolicyRsp rsp = new SyncAOPolicyRsp();
             rsp.setAccountId(s3AccountKey);
             rsp.setDate(date);
-            rsp.setPolicy(base64Policy(req.getAddress(), date));
+            rsp.setPolicy(policy);
             rsp.setSignature(signature);
             return rsp;
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
@@ -137,15 +137,17 @@ public class SyncService {
     }
 
     private String base64Policy(String address, String date){
+        ZonedDateTime exp = ZonedDateTime.now().plusHours(1);
+        String hexAddress = Hex.encodeHexString(Base64.getDecoder().decode(address));
         String policy = "{\n" +
-                "  \"expiration\": \"2022-04-01T12:00:00.000Z\",\n" +
+                "  \"expiration\": \""+ exp.format(DateTimeFormatter.ISO_INSTANT) + "\",\n" +
                 "  \"conditions\": [\n" +
                 "    {\"bucket\": \"tiki-sync-chain\"},\n" +
-                "    [\"starts-with\", \"$key\", \"" + address + "/\"], \n" +
+                "    [\"starts-with\", \"$key\", \"" + hexAddress + "/\"],\n" +
                 "    {\"x-amz-credential\": \"" + s3AccountKey + "/" + date + "/us-east-1/s3/aws4_request\"},\n" +
                 "    {\"x-amz-algorithm\": \"AWS4-HMAC-SHA256\"},\n" +
-                "    {\"x-amz-date\": \"" + date + "T000000Z\" },\n" +
-                "    {\"content-type\": \"application/json\" },\n" +
+                "    {\"x-amz-date\": \"" + date + "T000000Z\"},\n" +
+                "    {\"content-type\": \"application/json\"},\n" +
                 "    [\"starts-with\", \"$x-amz-object-lock-mode\", \"\"], \n" +
                 "    [\"starts-with\", \"$x-amz-object-lock-retain-until-date\", \"\"], \n" +
                 "    [\"starts-with\", \"$Content-MD5\", \"\"] \n" +
