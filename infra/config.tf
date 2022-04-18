@@ -13,8 +13,8 @@ data "digitalocean_project" "production" {
 
 resource "digitalocean_project_resources" "production" {
   project = data.digitalocean_project.production.id
-  resources = concat(data.digitalocean_project.production.resources,
-  [digitalocean_database_cluster.db-cluster-bouncer.urn])
+  resources = concat(formatlist(data.digitalocean_project.production.resources),
+  formatlist(digitalocean_database_cluster.db-cluster-bouncer.urn))
 }
 
 
