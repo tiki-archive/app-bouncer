@@ -57,11 +57,7 @@ public class OtpService {
         templateDataMap.put("dynamic-link",
                 "https://mytiki.app/?link=" +  URLEncoder.encode(path, StandardCharsets.UTF_8) +
                         "&apn=com.mytiki.app" +
-                        //"&isi=1560250866" + disabled while using TF with ifl
-                        "&ibi=com.mytiki.app" +
-                        "&ifl=" + URLEncoder.encode("https://testflight.apple.com/join/pUcjaGK8",StandardCharsets.UTF_8) +
-                        "&afl=" + URLEncoder.encode("https://play.google.com/store/apps/details?id=com.mytiki.app",StandardCharsets.UTF_8) +
-                        "&ofl=" + URLEncoder.encode("https://mytiki.com/app",StandardCharsets.UTF_8));
+                        "&ibi=com.mytiki.app");
 
         boolean emailSuccess = sendgridHelper.send(
                 otpAOIssueEmail.getEmail(),
