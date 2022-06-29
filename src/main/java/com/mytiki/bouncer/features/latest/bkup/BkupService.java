@@ -79,9 +79,14 @@ public class BkupService {
             if(bkupDO.getAccessCount() < ACCESS_LOCK_LIMIT)
                 find.setCiphertext(
                         new String(bkupDO.getCiphertext(), StandardCharsets.UTF_8));
-            else{
-                if(bkupDO.getLockCode() == null)
+            else if(bkupDO.getLockCode() == null)
                     bkupDO.setLockCode(UUID.randomUUID().toString());
+
+            bkupDO.setAccessCount(bkupDO.getAccessCount() + 1);
+            bkupDO.setLastAccessed(ZonedDateTime.now());
+            bkupRepository.save(bkupDO);
+
+            if(bkupDO.getAccessCount() >= ACCESS_LOCK_LIMIT) {
                 throw new ApiExceptionBuilder()
                         .httpStatus(HttpStatus.FORBIDDEN)
                         .messages(new ApiReplyAOMessageBuilder()
@@ -90,9 +95,6 @@ public class BkupService {
                                 .build())
                         .build();
             }
-            bkupDO.setAccessCount(bkupDO.getAccessCount() + 1);
-            bkupDO.setLastAccessed(ZonedDateTime.now());
-            bkupRepository.save(bkupDO);
         });
         return find;
     }
